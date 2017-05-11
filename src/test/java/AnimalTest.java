@@ -107,4 +107,12 @@ public class AnimalTest {
    Animal testAnimal = new Animal("Lion", 1);
    assertEquals(testAnimal.isAlive(), true);
  }
+
+ //test to determine accurately if the animal is dead
+ public void depleteLevels_reducesAllLevels() {
+   Animal testAnimal = new Animal("Lion", 1);
+   testAnimal.depleteLevels();
+   assertEquals(testAnimal.getHealthLevel(), (Animal.MIN_HEALTH_LEVEL)- 1);
+   assertEquals(testAnimal.getAgeLevel(), (Animal.MIN_AGE_LEVEL) - 1);
+ }
 }

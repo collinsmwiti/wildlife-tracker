@@ -45,6 +45,12 @@ public class Animal {
     return ageLevel;
   }
 
+  //constants methods
+  public void depleteLevels() {
+    healthLevel--;
+    ageLevel--;
+  }
+
   // an override method to return true if the animal name corresponding to the ranger's id are same
   @Override
   public boolean equals(Object otherAnimal) {
