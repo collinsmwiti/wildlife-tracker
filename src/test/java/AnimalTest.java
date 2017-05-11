@@ -115,4 +115,14 @@ public class AnimalTest {
    assertEquals(testAnimal.getHealthLevel(), (Animal.MIN_HEALTH_LEVEL)- 1);
    assertEquals(testAnimal.getAgeLevel(), (Animal.MIN_AGE_LEVEL) - 1);
  }
+
+ //test to recognize if an animal is dead when its level reaches minimum
+ @Test
+ public void isAlive_recognizesAnimalIsDeadWhenLevelIsReachMinimum_false() {
+   Animal testAnimal = new Animal("Lion", 1);
+   for(int i = Animal.MIN_ALL_LEVELS; i <= Animal.MIN_HEALTH_LEVEL; i++) {
+     testAnimal.depleteLevels();
+   }
+   assertEquals(testAnimal.isAlive(), false);
+ }
 }
