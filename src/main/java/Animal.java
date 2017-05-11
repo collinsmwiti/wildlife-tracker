@@ -20,6 +20,7 @@ public class Animal {
     this.name = name;
     this.rangerId = rangerId;
     this.healthLevel = MIN_HEALTH_LEVEL;
+    this.ageLevel = MIN_AGE_LEVEL;
   }
 
   //getter methods
@@ -37,6 +38,10 @@ public class Animal {
 
   public int getHealthLevel() {
     return healthLevel;
+  }
+
+  public int getAgeLevel() {
+    return ageLevel;
   }
 
   // an override method to return true if the animal name corresponding to the ranger's id are same

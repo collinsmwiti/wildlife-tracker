@@ -93,4 +93,11 @@ public class AnimalTest {
     Animal testAnimal = new Animal("Lion", 1);
     assertEquals(testAnimal.getHealthLevel(), (Animal.MIN_HEALTH_LEVEL));
   }
+
+  //test to check an animals age levels
+  @Test
+  public void animal_instantiatesWithAgeLevel() {
+    Animal testAnimal = new Animal("Lion", 1);
+    assertEquals(testAnimal.getAgeLevel(), (Animal.MIN_AGE_LEVEL));
+  }
 }
