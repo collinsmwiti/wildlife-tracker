@@ -55,6 +55,10 @@ public class Animal {
     healthLevel++;
   }
 
+  public void age() {
+    ageLevel++;
+  }
+
   // an override method to return true if the animal name corresponding to the ranger's id are same
   @Override
   public boolean equals(Object otherAnimal) {

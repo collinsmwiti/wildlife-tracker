@@ -133,4 +133,12 @@ public class AnimalTest {
    testAnimal.health();
    assertTrue(testAnimal.getHealthLevel() > (Animal.MIN_HEALTH_LEVEL));
  }
+
+ //test to increase age levels of an animal if the environment does not affect the animal negatively
+  @Test
+  public void age_increasesAnimalAgeLevel() {
+    Animal testAnimal = new Animal("Lion", 1);
+    testAnimal.age();
+    assertTrue(testAnimal.getAgeLevel() > (Animal.MIN_AGE_LEVEL));
+  }
 }
