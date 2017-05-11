@@ -1,7 +1,13 @@
+//imports
+import org.sql2o.*;
+import java.util.ArrayList;
+import java.util.List;
+
 //class Animal
 public class Animal {
   private String name;
   private int rangerId;
+  public int id;
 
   //constructor animal
   public Animal(String name, int rangerId) {
@@ -18,6 +24,10 @@ public class Animal {
     return rangerId;
   }
 
+  public int getId() {
+    return id;
+  }
+
   // an override method to return true if the animal name corresponding to the ranger's id are same
   @Override
   public boolean equals(Object otherAnimal) {
@@ -27,6 +37,25 @@ public class Animal {
       Animal newAnimal = (Animal) otherAnimal;
       return this.getName().equals(newAnimal.getName()) &&
             this.getRangerId() == newAnimal.getRangerId();
+    }
+  }
+  //save method
+  public void save() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "INSERT INTO animals (name, rangerid) VALUES (:name, :rangerId)";
+      this.id = (int) con.createQuery(sql, true)
+      .addParameter("name", this.name)
+      .addParameter("rangerId", this.rangerId)
+      .executeUpdate()
+      .getKey();
+    }
+  }
+
+  // to list animals within the database
+  public static List<Animal> all() {
+    String sql = "SELECT * FROM animals";
+    try(Connection con = DB.sql2o.open()) {
+      return con.createQuery(sql).executeAndFetch(Animal.class);
     }
   }
 }

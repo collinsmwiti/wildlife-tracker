@@ -37,4 +37,32 @@ public class AnimalTest {
     Animal anotherAnimal = new Animal("Lion", 1);
     assertTrue(testAnimal.equals(anotherAnimal));
   }
+
+  // used to save animals in the database
+  @Test
+  public void save_returnsTrueIfDescriptionsAretheSame() {
+    Animal testAnimal = new Animal("Lion", 1);
+    testAnimal.save();
+    assertTrue(Animal.all().get(0).equals(testAnimal));
+  }
+
+  //assigning id to the animals
+  @Test
+  public void save_assignsIdToAnimal() {
+    Animal testAnimal = new Animal("Lion", 1);
+    testAnimal.save();
+    Animal savedAnimal = Animal.all().get(0);
+    assertEquals(savedAnimal.getId(), testAnimal.getId());
+  }
+
+  // test to return all instances of animals as true
+  @Test
+  public void all_returnsAllInstancesOfAnimal_true() {
+    Animal firstAnimal = new Animal("Lion", 1);
+    firstAnimal.save();
+    Animal secondAnimal = new Animal("Deer", 1);
+    secondAnimal.save();
+    assertEquals(true, Animal.all().get(0).equals(firstAnimal));
+    assertEquals(true, Animal.all().get(1).equals(secondAnimal));
+  }
 }
