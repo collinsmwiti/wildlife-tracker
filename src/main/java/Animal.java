@@ -12,8 +12,9 @@ public class Animal {
   private int healthLevel;
   private int ageLevel;
 
-  public static final int MIN_HEALTH_LEVEL = 0;
-  public static final int MIN_AGE_LEVEL = 0;
+  public static final int MIN_HEALTH_LEVEL = 1;
+  public static final int MIN_AGE_LEVEL = 1;
+  public static final int MIN_ALL_LEVELS = 0;
 
   //constructor animal
   public Animal(String name, int rangerId) {
@@ -84,6 +85,15 @@ public class Animal {
       .executeAndFetchFirst(Animal.class);
       return animal;
     }
+  }
+
+  // to check if an animal is dead or alive
+  public boolean isAlive() {
+    if (healthLevel <= MIN_ALL_LEVELS ||
+    ageLevel <= MIN_ALL_LEVELS) {
+      return false;
+    }
+    return true;
   }
 
 }

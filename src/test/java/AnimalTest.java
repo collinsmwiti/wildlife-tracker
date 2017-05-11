@@ -100,4 +100,11 @@ public class AnimalTest {
     Animal testAnimal = new Animal("Lion", 1);
     assertEquals(testAnimal.getAgeLevel(), (Animal.MIN_AGE_LEVEL));
   }
+
+  //test to notify if the animal is dead or alive
+  @Test
+  public void isAlive_confirmsAnimalIsAliveIfAllLevelsAboveMinimum_true(){
+   Animal testAnimal = new Animal("Lion", 1);
+   assertEquals(testAnimal.isAlive(), true);
+ }
 }
