@@ -58,4 +58,16 @@ public class Animal {
       return con.createQuery(sql).executeAndFetch(Animal.class);
     }
   }
+
+  // placing a find method in our class in order to find animals according to its id
+  public static Animal find(int id)  {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM animals where id=:id";
+      Animal animal = con.createQuery(sql)
+      .addParameter("id", id)
+      .executeAndFetchFirst(Animal.class);
+      return animal;
+    }
+  }
+
 }
