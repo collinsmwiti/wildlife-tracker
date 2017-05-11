@@ -8,11 +8,18 @@ public class Animal {
   private String name;
   private int rangerId;
   public int id;
+  //constants
+  private int healthLevel;
+  private int ageLevel;
+
+  public static final int MIN_HEALTH_LEVEL = 0;
+  public static final int MIN_AGE_LEVEL = 0;
 
   //constructor animal
   public Animal(String name, int rangerId) {
     this.name = name;
     this.rangerId = rangerId;
+    this.healthLevel = MIN_HEALTH_LEVEL;
   }
 
   //getter methods
@@ -26,6 +33,10 @@ public class Animal {
 
   public int getId() {
     return id;
+  }
+
+  public int getHealthLevel() {
+    return healthLevel;
   }
 
   // an override method to return true if the animal name corresponding to the ranger's id are same

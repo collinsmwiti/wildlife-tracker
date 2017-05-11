@@ -86,4 +86,11 @@ public class AnimalTest {
     Animal savedAnimal = Animal.find(testAnimal.getId());
     assertEquals(savedAnimal.getRangerId(), testRanger.getId());
   }
+
+  //test to check the animal's health levels
+  @Test
+  public void animal_instantiatesWithHealthLevel() {
+    Animal testAnimal = new Animal("Lion", 1);
+    assertEquals(testAnimal.getHealthLevel(), (Animal.MIN_HEALTH_LEVEL));
+  }
 }
