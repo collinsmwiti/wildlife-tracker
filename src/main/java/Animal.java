@@ -17,4 +17,16 @@ public class Animal {
   public int getRangerId() {
     return rangerId;
   }
+
+  // an override method to return true if the animal name corresponding to the ranger's id are same
+  @Override
+  public boolean equals(Object otherAnimal) {
+    if(!(otherAnimal instanceof Animal)) {
+      return false;
+    } else {
+      Animal newAnimal = (Animal) otherAnimal;
+      return this.getName().equals(newAnimal.getName()) &&
+            this.getRangerId() == newAnimal.getRangerId();
+    }
+  }
 }
