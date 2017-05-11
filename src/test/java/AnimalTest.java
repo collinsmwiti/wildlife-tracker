@@ -125,4 +125,12 @@ public class AnimalTest {
    }
    assertEquals(testAnimal.isAlive(), false);
  }
+
+ //test to increase health levels if an animal is in a condusive environment
+ @Test
+ public void health_increasesAnimalHealthLevel() {
+   Animal testAnimal = new Animal("Lion", 1);
+   testAnimal.health();
+   assertTrue(testAnimal.getHealthLevel() > (Animal.MIN_HEALTH_LEVEL));
+ }
 }
