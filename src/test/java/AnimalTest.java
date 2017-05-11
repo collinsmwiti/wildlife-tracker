@@ -75,4 +75,15 @@ public class AnimalTest {
     secondAnimal.save();
     assertEquals(Animal.find(secondAnimal.getId()), secondAnimal);
   }
+
+  //test to create relationship between rangers and animals
+  @Test
+  public void save_savesRangerIdIntoDB_true() {
+    Ranger testRanger = new Ranger("Sniper", "image", "sniper@sniper.com", 0700000000);
+    testRanger.save();
+    Animal testAnimal = new Animal("Lion", testRanger.getId());
+    testAnimal.save();
+    Animal savedAnimal = Animal.find(testAnimal.getId());
+    assertEquals(savedAnimal.getRangerId(), testRanger.getId());
+  }
 }

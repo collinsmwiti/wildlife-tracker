@@ -2,6 +2,7 @@
 import org.junit.*;
 import static org.junit.Assert.*;
 import org.sql2o.*;
+import java.util.Arrays;
 
 //rangertest class
 public class RangerTest {
@@ -89,5 +90,18 @@ public class RangerTest {
     Ranger secondRanger = new Ranger("Drone", "image", "drone@drone.com", 0700000001);
     secondRanger.save();
     assertEquals(Ranger.find(secondRanger.getId()), secondRanger);
+  }
+
+  //test to retrieve all animals from the database
+  @Test
+  public void getAnimals_retrievesAllAnimalsFromDatabase_animalsList() {
+    Ranger testRanger = new Ranger("Sniper", "image", "sniper@sniper.com", 0700000000);
+    testRanger.save();
+    Animal firstAnimal = new Animal("Lion", testRanger.getId());
+    firstAnimal.save();
+    Animal secondAnimal = new Animal("Deer", testRanger.getId());
+    secondAnimal.save();
+    Animal[] animals = new Animal[] {firstAnimal, secondAnimal};
+    assertTrue(testRanger.getAnimals().containsAll(Arrays.asList(animals)));
   }
 }

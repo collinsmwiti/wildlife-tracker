@@ -86,4 +86,14 @@ public class Ranger {
       return ranger;
     }
   }
+
+  // method used to display animals from the database as a list
+  public List<Animal> getAnimals() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql ="SELECT * FROM animals where rangerId=:id";
+      return con.createQuery(sql)
+      .addParameter("id", this.id)
+      .executeAndFetch(Animal.class);
+    }
+  }
 }
