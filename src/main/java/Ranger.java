@@ -100,4 +100,25 @@ public class Ranger {
     }
     return allAnimals;
   }
+
+  // methods to indicate locations watched by the ranger
+  public List<Location> getLocations() {
+    try(Connection con = DB.sql2o.open()) {
+      String joinQuery = "SELECT locationName FROM sightings WHERE rangerName = :rangerName";
+      List<String> locationNames = con.createQuery(joinQuery)
+      .addParameter("rangerName", this.getName())
+      .executeAndFetch(String.class);
+
+      List<Location> locations = new ArrayList<Location>();
+
+      for (String locationName : locationNames) {
+        String locationQuery = "SELECT * FROM locations WHERE locationName = :locationName";
+        Location location = con.createQuery(locationQuery)
+        .addParameter("locationName", locationName)
+        .executeAndFetchFirst(Location.class);
+        locations.add(location);
+      }
+      return locations;
+    }
+  }
 }

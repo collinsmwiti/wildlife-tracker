@@ -3,6 +3,7 @@ import org.junit.*;
 import static org.junit.Assert.*;
 import org.sql2o.*;
 import java.util.Arrays;
+import java.util.List;
 
 //rangertest class
 public class RangerTest {
@@ -103,5 +104,17 @@ public class RangerTest {
     secondAnimal.save();
     Object[] animals = new Object[] {firstAnimal, secondAnimal};
     assertTrue(testRanger.getAnimals().containsAll(Arrays.asList(animals)));
+  }
+
+  //test to get location watched by a ranger
+  @Test
+  public void getLocations_returnsAllLocations_List() {
+    Location testLocation = new Location("image", "Forest", 1, "Sniper");
+    testLocation.save();
+    Ranger testRanger = new Ranger("Sniper", "image", "sniper@sniper.com", 0700000000);
+    testRanger.save();
+    testLocation.addRanger(testRanger);
+    List savedLocations = testRanger.getLocations();
+    assertEquals(1, savedLocations.size());
   }
 }

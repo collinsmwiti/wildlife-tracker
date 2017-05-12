@@ -3,6 +3,8 @@ import org.junit.*;
 import static org.junit.Assert.*;
 import org.sql2o.*;
 import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
 
 //class LocationTest
 public class LocationTest {
@@ -71,5 +73,29 @@ public class LocationTest {
     secondLocation.save();
     assertEquals(true, Location.all().get(0).equals(firstLocation));
     assertEquals(true, Location.all().get(1).equals(secondLocation));
+  }
+
+  //test used to create many-to-many relationship
+  @Test
+  public void addRanger_addsRangerToLocation() {
+    Location testLocation = new Location("image", "Forest", 1, "Sniper");
+    testLocation.save();
+    Ranger testRanger = new Ranger("Sniper", "image", "sniper@sniper.com", 0700000000);
+    testRanger.save();
+    testLocation.addRanger(testRanger);
+    Ranger savedRanger = testLocation.getRangers().get(0);
+    assertTrue(testRanger.equals(savedRanger));
+  }
+
+  //test used to retrieve all rangers associated with a particular location
+  @Test
+  public void getRangers_returnsAllRangers_List() {
+    Location testLocation = new Location("image", "Forest", 1, "Sniper");
+    testLocation.save();
+    Ranger testRanger = new Ranger("Sniper", "image", "sniper@sniper.com", 0700000000);
+    testRanger.save();
+    testLocation.addRanger(testRanger);
+    List savedRangers = testLocation.getRangers();
+    assertEquals(savedRangers.size(), 1);
   }
 }
