@@ -88,12 +88,16 @@ public class Ranger {
   }
 
   // method used to display animals from the database as a list
-  public List<Animal> getAnimals() {
+  public List<Object> getAnimals() {
+    List<Object> allAnimals = new ArrayList<Object>();
+
     try(Connection con = DB.sql2o.open()) {
-      String sql ="SELECT * FROM animals where rangerId=:id";
-      return con.createQuery(sql)
+      String sql ="SELECT * FROM animals where rangerId=:id AND type='endangered';";
+      List<EndangeredAnimal> endangeredAnimals = con.createQuery(sql)
       .addParameter("id", this.id)
-      .executeAndFetch(Animal.class);
+      .executeAndFetch(EndangeredAnimal.class);
+      allAnimals.addAll(endangeredAnimals);
     }
+    return allAnimals;
   }
 }
