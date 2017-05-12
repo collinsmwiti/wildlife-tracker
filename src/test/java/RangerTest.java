@@ -117,4 +117,16 @@ public class RangerTest {
     List savedLocations = testRanger.getLocations();
     assertEquals(1, savedLocations.size());
   }
+
+  //test to remove the association without been deleted entirely
+  @Test
+  public void leaveLocation_removesAssociationWithSpecifiedCommunity() {
+    Location testLocation = new Location("image", "Forest", 1, "Sniper");
+    testLocation.save();
+    Ranger testRanger = new Ranger("Sniper", "image", "sniper@sniper.com", 0700000000);
+    testRanger.save();
+    testRanger.leaveLocation(testLocation);
+    List savedLocations =testRanger.getLocations();
+    assertEquals(0, savedLocations.size());
+  }
 }

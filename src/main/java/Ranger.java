@@ -121,4 +121,15 @@ public class Ranger {
       return locations;
     }
   }
+
+  //method to enable a ranger to leave the wildlife area incase if he/she has retired, quited or demoted
+  public void leaveLocation(Location location) {
+    try(Connection con = DB.sql2o.open()) {
+      String joinRemovalQuery = "DELETE FROM sightings WHERE locationName = :locationName AND rangerName = :rangerName;";
+      con.createQuery(joinRemovalQuery)
+      .addParameter("locationName", location.getLocationName())
+      .addParameter("rangerName", this.getName())
+      .executeUpdate();
+    }
+  }
 }

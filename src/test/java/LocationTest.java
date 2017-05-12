@@ -98,4 +98,27 @@ public class LocationTest {
     List savedRangers = testLocation.getRangers();
     assertEquals(savedRangers.size(), 1);
   }
+
+  //test to remove location entries into the joint table
+  @Test
+  public void delete_deletesAllRangersAndLocationsAssociations() {
+    Location testLocation = new Location("image", "Forest", 1, "Sniper");
+    testLocation.save();
+    Ranger testRanger = new Ranger("Sniper", "image", "sniper@sniper.com", 0700000000);
+    testRanger.save();
+    testLocation.addRanger(testRanger);
+    testLocation.delete();
+    assertEquals(0, testRanger.getLocations().size());
+  }
+
+  //test to remove association from sightings
+  @Test
+  public void removeRanger_removesAssociationWithSpecifiedLocation() {
+    Location testLocation = new Location("image", "Forest", 1, "Sniper");
+    Ranger testRanger = new Ranger("Sniper", "image", "sniper@sniper.com", 0700000000);
+    testRanger.save();
+    testLocation.removeRanger(testRanger);
+    List savedRangers = testLocation.getRangers();
+    assertEquals(0, savedRangers.size());
+  }
 }

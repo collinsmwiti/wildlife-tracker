@@ -109,4 +109,28 @@ public class Location {
       }
     }
 
+    // method to add delete functionality in class Location
+    public void delete() {
+      try(Connection con = DB.sql2o.open()) {
+        String sql = "DELETE FROM locations WHERE locationName = :locationName;";
+        con.createQuery(sql)
+        .addParameter("locationName", this.locationName)
+        .executeUpdate();
+        String joinDeleteQuery = "DELETE FROM sightings WHERE locationName = :locationName";
+        con.createQuery(joinDeleteQuery)
+        .addParameter("locationName", this.getLocationName())
+        .executeUpdate();
+      }
+    }
+
+    //method to remove a ranger from the location
+    public void removeRanger(Ranger ranger) {
+      try(Connection con = DB.sql2o.open()) {
+        String joinRemovalQuery = "DELETE FROM sightings WHERE locationName = :locationName AND rangerName = :rangerName;";
+        con.createQuery(joinRemovalQuery)
+        .addParameter("locationName", this.getLocationName())
+        .addParameter("rangerName", ranger.getName())
+        .executeUpdate();
+      }
+    }
   }
