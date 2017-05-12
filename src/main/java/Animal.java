@@ -2,6 +2,7 @@
 import org.sql2o.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Timestamp;
 
 //class Animal
 public class Animal {
@@ -15,6 +16,10 @@ public class Animal {
   public static final int MIN_HEALTH_LEVEL = 1;
   public static final int MIN_AGE_LEVEL = 1;
   public static final int MIN_ALL_LEVELS = 0;
+
+  private Timestamp birthday;
+  private Timestamp lastHealth;
+  private Timestamp lastAge;
 
   //constructor animal
   public Animal(String name, int rangerId) {
@@ -59,6 +64,10 @@ public class Animal {
     ageLevel++;
   }
 
+  public Timestamp getBirthday() {
+    return birthday;
+  }
+
   // an override method to return true if the animal name corresponding to the ranger's id are same
   @Override
   public boolean equals(Object otherAnimal) {
@@ -73,7 +82,7 @@ public class Animal {
   //save method
   public void save() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO animals (name, rangerid) VALUES (:name, :rangerId)";
+      String sql = "INSERT INTO animals (name, rangerid, birthday) VALUES (:name, :rangerId, now())";
       this.id = (int) con.createQuery(sql, true)
       .addParameter("name", this.name)
       .addParameter("rangerId", this.rangerId)

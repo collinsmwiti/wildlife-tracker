@@ -2,6 +2,8 @@
 import org.junit.*;
 import static org.junit.Assert.*;
 import org.sql2o.*;
+import java.sql.Timestamp;
+import java.util.Date;
 
 //class test animal
 public class AnimalTest {
@@ -141,4 +143,15 @@ public class AnimalTest {
     testAnimal.age();
     assertTrue(testAnimal.getAgeLevel() > (Animal.MIN_AGE_LEVEL));
   }
+
+  //test to save animals date of birthday
+  @Test
+  public void save_recordsTimeOfCreationInDatabase() {
+    Animal testAnimal = new Animal("Lion", 1);
+    testAnimal.save();
+    Timestamp savedAnimalBirthday = Animal.find(testAnimal.getId()).getBirthday();
+    Timestamp rightNow = new Timestamp(new Date().getTime());
+    assertEquals(rightNow.getDay(), savedAnimalBirthday.getDay());
+  }
+
 }
