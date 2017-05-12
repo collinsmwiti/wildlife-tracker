@@ -54,6 +54,10 @@ public class Animal {
     return lastHealth;
   }
 
+  public Timestamp getLastAge() {
+    return lastAge;
+  }
+
   //constants methods
   public void depleteLevels() {
     healthLevel--;
@@ -71,6 +75,12 @@ public class Animal {
   }
 
   public void age() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "UPDATE animals SET lastage = now() WHERE id = :id";
+      con.createQuery(sql)
+      .addParameter("id", id)
+      .executeUpdate();
+    }
     ageLevel++;
   }
 

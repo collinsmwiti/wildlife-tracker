@@ -166,4 +166,15 @@ public class AnimalTest {
     assertEquals(DateFormat.getDateTimeInstance().format(rightNow), DateFormat.getDateTimeInstance().format(savedAnimalLastHealth));
   }
 
+  //test to check the last age of an animal
+  @Test
+  public void age_recordsTimeLastAgeInDatabase() {
+    Animal testAnimal = new Animal("Lion", 1);
+    testAnimal.save();
+    testAnimal.age();
+    Timestamp savedAnimalLastAge = Animal.find(testAnimal.getId()).getLastAge();
+    Timestamp rightNow = new Timestamp(new Date().getTime());
+    assertEquals(DateFormat.getDateTimeInstance().format(rightNow), DateFormat.getDateTimeInstance().format(savedAnimalLastAge));
+  }
+
 }
