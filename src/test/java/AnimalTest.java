@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import org.sql2o.*;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.text.DateFormat;
 
 //class test animal
 public class AnimalTest {
@@ -152,6 +153,17 @@ public class AnimalTest {
     Timestamp savedAnimalBirthday = Animal.find(testAnimal.getId()).getBirthday();
     Timestamp rightNow = new Timestamp(new Date().getTime());
     assertEquals(rightNow.getDay(), savedAnimalBirthday.getDay());
+  }
+
+  //test to determine the health of an animal
+  @Test
+  public void health_recordsTimeLastHealthInDatabase() {
+    Animal testAnimal = new Animal("Lion", 1);
+    testAnimal.save();
+    testAnimal.health();
+    Timestamp savedAnimalLastHealth = Animal.find(testAnimal.getId()).getLastHealth();
+    Timestamp rightNow = new Timestamp(new Date().getTime());
+    assertEquals(DateFormat.getDateTimeInstance().format(rightNow), DateFormat.getDateTimeInstance().format(savedAnimalLastHealth));
   }
 
 }
