@@ -177,4 +177,13 @@ public class EndangeredAnimalTest {
     assertEquals(DateFormat.getDateTimeInstance().format(rightNow), DateFormat.getDateTimeInstance().format(savedEndangeredAnimalLastAge));
   }
 
+  //test to delete an endangered animal if its dead or ok
+  @Test
+  public void delete_deletesEndangeredAnimal_true() {
+    EndangeredAnimal testEndangeredAnimal = new EndangeredAnimal("Lion", 1);
+    testEndangeredAnimal.save();
+    testEndangeredAnimal.delete();
+    assertEquals(null, EndangeredAnimal.find(testEndangeredAnimal.getId()));
+  }
+
 }

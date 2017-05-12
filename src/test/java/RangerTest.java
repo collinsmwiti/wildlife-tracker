@@ -129,4 +129,16 @@ public class RangerTest {
     List savedLocations =testRanger.getLocations();
     assertEquals(0, savedLocations.size());
   }
+
+  //test to delete a ranger within the class
+  @Test
+  public void delete_deletesAllRangersAndLocationsAssociations() {
+    Location testLocation = new Location("image", "Forest", 1, "Sniper");
+    testLocation.save();
+    Ranger testRanger = new Ranger("Sniper", "image", "sniper@sniper.com", 0700000000);
+    testRanger.save();
+    testLocation.addRanger(testRanger);
+    testRanger.delete();
+    assertEquals(0, testLocation.getRangers().size());
+  }
 }

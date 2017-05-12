@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // class ranger
-public class Ranger {
+public class Ranger implements DatabaseManagement {
   // attributes and properties of class ranger
   private String name;
   private String image;
@@ -56,6 +56,7 @@ public class Ranger {
   }
 
   // to save rangers details within the database
+  @Override
   public void save() {
     try(Connection con = DB.sql2o.open()) {
       String sql = "INSERT INTO rangers (name, image, email, contacts) VALUES (:name, :image, :email, :contacts)";
@@ -128,6 +129,21 @@ public class Ranger {
       String joinRemovalQuery = "DELETE FROM sightings WHERE locationName = :locationName AND rangerName = :rangerName;";
       con.createQuery(joinRemovalQuery)
       .addParameter("locationName", location.getLocationName())
+      .addParameter("rangerName", this.getName())
+      .executeUpdate();
+    }
+  }
+
+  //method used to delete a ranger within the class
+  @Override
+  public void delete() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "DELETE FROM rangers WHERE name = :rangerName;";
+      con.createQuery(sql)
+      .addParameter("rangerName", this.name)
+      .executeUpdate();
+      String joinDeleteQuery = "DELETE FROM sightings WHERE rangerName = :rangerName";
+      con.createQuery(joinDeleteQuery)
       .addParameter("rangerName", this.getName())
       .executeUpdate();
     }

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 // class Location
-public class Location {
+public class Location implements DatabaseManagement {
   private String image;
   private String locationName;
   private int endangeredAnimalid;
@@ -43,6 +43,7 @@ public class Location {
     }
 
   //Override method
+  @Override
   public boolean equals(Object otherLocation) {
     if(!(otherLocation instanceof Location)) {
         return false;
@@ -56,6 +57,7 @@ public class Location {
   }
 
     // method used for saving data in the database
+    @Override
     public void save() {
       try(Connection con = DB.sql2o.open()) {
         String sql = "INSERT INTO locations (image, locationName, endangeredAnimalid, rangerName) VALUES (:image, :locationName, :endangeredAnimalid, :rangerName)";
@@ -110,6 +112,7 @@ public class Location {
     }
 
     // method to add delete functionality in class Location
+    @Override
     public void delete() {
       try(Connection con = DB.sql2o.open()) {
         String sql = "DELETE FROM locations WHERE locationName = :locationName;";
