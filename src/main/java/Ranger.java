@@ -1,151 +1,229 @@
 //imports
-import org.sql2o.*;
-import java.util.ArrayList;
 import java.util.List;
+import org.sql2o.*;
 
-// class ranger
+//class Ranger implementing interface DatabaseManagement
 public class Ranger implements DatabaseManagement {
-  // attributes and properties of class ranger
-  private String name;
-  private String image;
-  private String email;
-  private int contacts;
   private int id;
+  private String userName;
+  private String firstName;
+  private String lastName;
+  private int badge;
+  private long phone;
 
-  //constructor ranger
-  public Ranger(String name, String image, String email, int contacts) {
-    this.name = name;
-    this.image = image;
-    this.email = email;
-    this.contacts = contacts;
+//constructor ranger
+  public Ranger(String userName, String firstName, String lastName, int badge, long phone) {
+    if(DatabaseManagement.nameValidation(userName)) {
+      this.userName = userName;
+    }
+    if(DatabaseManagement.nameValidation(firstName)) {
+      this.firstName = firstName;
+    }
+    if(DatabaseManagement.nameValidation(lastName)) {
+      this.lastName = lastName;
+    }
+    this.badge = badge;
+    this.phone = phone;
   }
 
-  //getter methods
-  public String getName() {
+//getters and setters methods
+  public int getId() {
+    return this.id;
+  }
+
+  public String getUserName() {
+    return this.userName;
+  }
+
+  public void setUserName(String userName) {
+    if(DatabaseManagement.nameValidation(userName)) {
+      this.userName = userName;
+    }
+  }
+
+  public String getFirstName() {
+    return this.firstName;
+  }
+
+  public void setFirstName(String firstName) {
+    if(DatabaseManagement.nameValidation(firstName)) {
+      this.firstName = firstName;
+    }
+  }
+
+  public String getLastName() {
+    return this.lastName;
+  }
+
+  public void setLastName(String lastName) {
+    if(DatabaseManagement.nameValidation(lastName)) {
+      this.lastName = lastName;
+    }
+  }
+
+  public int getBadge() {
+    return this.badge;
+  }
+
+  public void setBadge(int badge) {
+    this.badge = badge;
+  }
+
+  public long getPhone() {
+    return this.phone;
+  }
+
+  public void setPhone(long phone) {
+    this.phone = phone;
+  }
+
+//save rangers to the database
+  public void save() {
+    if (Ranger.userNameExists(this.userName, this.id)) {
+      throw new IllegalArgumentException("Error: Name already exists.");
+    } else {
+      try(Connection con = DB.sql2o.open()) {
+        String sql = "INSERT INTO rangers (username, firstname, lastname, badge, phone) VALUES (:username, :firstname, :lastname, :badge, :phone);";
+        this.id = (int) con.createQuery(sql, true)
+        .addParameter("username", this.userName)
+        .addParameter("firstname", this.firstName)
+        .addParameter("lastname", this.lastName)
+        .addParameter("badge", this.badge)
+        .addParameter("phone", this.phone)
+        .executeUpdate()
+        .getKey();
+      }
+    }
+  }
+
+//update the rangers identity
+  public void update() {
+    if (Ranger.userNameExists(this.userName, this.id)) {
+      throw new IllegalArgumentException("Error: Name already exists.");
+    } else {
+      try(Connection con = DB.sql2o.open()) {
+        String sql = "UPDATE rangers SET username = :username, firstname = :firstname, lastname = :lastname, badge = :badge, phone = :phone WHERE id = :id;";
+        con.createQuery(sql)
+          .addParameter("id", this.id)
+          .addParameter("username", this.userName)
+          .addParameter("firstname", this.firstName)
+          .addParameter("lastname", this.lastName)
+          .addParameter("badge", this.badge)
+          .addParameter("phone", this.phone)
+          .executeUpdate();
+      }
+    }
+  }
+
+//delete the ranger if incase is fired, dead, quitted his/her job or retired
+  public void delete() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "DELETE FROM rangers WHERE id = :id;";
+      con.createQuery(sql)
+        .addParameter("id", this.id)
+        .executeUpdate();
+    }
+  }
+
+//lists the sightings which the rangers have done
+  public List<Sighting> getSightings() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM sightings WHERE ranger_id = :ranger_id;";
+      return con.createQuery(sql)
+        .addParameter("ranger_id", this.id)
+        .addColumnMapping("time_of_sighting", "timeOfSighting")
+        .addColumnMapping("animal_id", "animalId")
+        .addColumnMapping("location_id", "locationId")
+        .addColumnMapping("ranger_id", "rangerId")
+        .executeAndFetch(Sighting.class);
+    }
+  }
+
+//check if the ranger doing the sightings if they exists in the database
+  public static boolean userNameExists(String userName, int id) {
+    Integer count = 0;
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT count(username) FROM rangers WHERE username = :username AND id != :id;";
+      count = con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .addParameter("username", userName)
+        .addParameter("id", id)
+        .executeScalar(Integer.class);
+    }
+    return count != 0;
+  }
+
+//check if their ids too exists in the database
+  public static boolean idExists(int id) {
+    Integer count = 0;
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT count(username) FROM rangers WHERE id = :id;";
+      count = con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .addParameter("id", id)
+        .executeScalar(Integer.class);
+    }
+    return count != 0;
+  }
+
+//used to get rangers usernames
+  public static String getRangerUserName(int id) {
+    String name;
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT username FROM rangers WHERE id = :id;";
+      name = con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .addParameter("id", id)
+        .executeScalar(String.class);
+    }
     return name;
   }
 
-  public String getImage() {
-    return image;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public int getContacts() {
-    return contacts;
-  }
-
-  public int getId() {
-    return id;
-  }
-
-  //an override used to check if an object equals to another object
-  @Override
-  public boolean equals(Object otherRanger) {
-    if (!(otherRanger instanceof Ranger)) {
-      return false;
-    } else {
-      Ranger newRanger = (Ranger) otherRanger;
-      return this.getName().equals(newRanger.getName()) &&
-            this.getImage().equals(newRanger.getImage()) &&
-            this.getEmail().equals(newRanger.getEmail()) &&
-            this.getContacts()== (newRanger.getContacts());
-    }
-  }
-
-  // to save rangers details within the database
-  @Override
-  public void save() {
-    try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO rangers (name, image, email, contacts) VALUES (:name, :image, :email, :contacts)";
-      this.id = (int) con.createQuery(sql, true)
-      .addParameter("name", this.name)
-      .addParameter("image", this.image)
-      .addParameter("email", this.email)
-      .addParameter("contacts", this.contacts)
-      .executeUpdate()
-      .getKey();
-    }
-  }
-
-  // to show lists of rangers within the database
+//lists all the rangers working in the forest department
   public static List<Ranger> all() {
-    String sql = "SELECT * FROM rangers";
     try(Connection con = DB.sql2o.open()) {
-      return con.createQuery(sql).executeAndFetch(Ranger.class);
+      String sql = "SELECT * FROM rangers;";
+      return con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .executeAndFetch(Ranger.class);
     }
   }
-  // used to find rangers according to their id
+
+//used to find the ranger according to their ids
   public static Ranger find(int id) {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "SELECT * FROM rangers where id=:id";
-      Ranger ranger = con.createQuery(sql)
-      .addParameter("id", id)
-      .executeAndFetchFirst(Ranger.class);
-      return ranger;
+      String sql = "SELECT * FROM rangers WHERE id = :id;";
+      return con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .addParameter("id", id)
+        .executeAndFetchFirst(Ranger.class);
     }
   }
 
-  // method used to display animals from the database as a list
-  public List<Object> getAnimals() {
-    List<Object> allAnimals = new ArrayList<Object>();
-
+//search the rangers
+  public static List<Ranger> search(String search) {
     try(Connection con = DB.sql2o.open()) {
-      String sql ="SELECT * FROM animals where rangerId=:id AND type='endangered';";
-      List<EndangeredAnimal> endangeredAnimals = con.createQuery(sql)
-      .addParameter("id", this.id)
-      .executeAndFetch(EndangeredAnimal.class);
-      allAnimals.addAll(endangeredAnimals);
-    }
-    return allAnimals;
-  }
-
-  // methods to indicate locations watched by the ranger
-  public List<Location> getLocations() {
-    try(Connection con = DB.sql2o.open()) {
-      String joinQuery = "SELECT locationName FROM sightings WHERE rangerName = :rangerName";
-      List<String> locationNames = con.createQuery(joinQuery)
-      .addParameter("rangerName", this.getName())
-      .executeAndFetch(String.class);
-
-      List<Location> locations = new ArrayList<Location>();
-
-      for (String locationName : locationNames) {
-        String locationQuery = "SELECT * FROM locations WHERE locationName = :locationName";
-        Location location = con.createQuery(locationQuery)
-        .addParameter("locationName", locationName)
-        .executeAndFetchFirst(Location.class);
-        locations.add(location);
-      }
-      return locations;
+      String sql = "SELECT * FROM rangers WHERE username ~* :search OR firstname ~* :search OR lastname ~* :search;";
+      return con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .addParameter("search", ".*" + search + ".*")
+        .executeAndFetch(Ranger.class);
     }
   }
 
-  //method to enable a ranger to leave the wildlife area incase if he/she has retired, quited or demoted
-  public void leaveLocation(Location location) {
-    try(Connection con = DB.sql2o.open()) {
-      String joinRemovalQuery = "DELETE FROM sightings WHERE locationName = :locationName AND rangerName = :rangerName;";
-      con.createQuery(joinRemovalQuery)
-      .addParameter("locationName", location.getLocationName())
-      .addParameter("rangerName", this.getName())
-      .executeUpdate();
-    }
-  }
-
-  //method used to delete a ranger within the class
+//checks if ranger conducting sightings is genuine, if he/she is, it provides their credentials
   @Override
-  public void delete() {
-    try(Connection con = DB.sql2o.open()) {
-      String sql = "DELETE FROM rangers WHERE name = :rangerName;";
-      con.createQuery(sql)
-      .addParameter("rangerName", this.name)
-      .executeUpdate();
-      String joinDeleteQuery = "DELETE FROM sightings WHERE rangerName = :rangerName";
-      con.createQuery(joinDeleteQuery)
-      .addParameter("rangerName", this.getName())
-      .executeUpdate();
+  public boolean equals(Object otherObject) {
+    if (!(otherObject instanceof Ranger)) {
+      return false;
+    } else {
+      Ranger otherRanger = (Ranger) otherObject;
+      return this.getId() == otherRanger.getId() &&
+        this.getFirstName().equals(otherRanger.getFirstName()) &&
+        this.getLastName().equals(otherRanger.getLastName()) &&
+        this.getBadge() == otherRanger.getBadge() &&
+        this.getPhone() == otherRanger.getPhone();
     }
   }
+
 }

@@ -11,18 +11,18 @@ public class DatabaseRule extends ExternalResource {
     DB.sql2o = new Sql2o("jdbc:postgresql://localhost:5432/wildlife_tracker_test", "collins", "password");
   }
 
-// to enhance tasks are done after every test is done
-  @Override
-  protected void after() {
-    try(Connection con = DB.sql2o.open()) {
-      String deleteRangersQuery = "DELETE FROM rangers *;";
-      String deleteAnimalsQuery = "DELETE FROM animals *;";
-      String deleteLocationsQuery = "DELETE FROM locations *;";
-      String deleteJoinsQuery = "DELETE FROM sightings *;";
-      con.createQuery(deleteRangersQuery).executeUpdate();
-      con.createQuery(deleteAnimalsQuery).executeUpdate();
-      con.createQuery(deleteLocationsQuery).executeUpdate();
-      con.createQuery(deleteJoinsQuery).executeUpdate();
-    }
+// to enhance queries are done after every test is done
+@Override
+protected void after() {
+  try(Connection con = DB.sql2o.open()) {
+    String deleteAnimalsQuery = "DELETE FROM animals *;";
+    String deleteRangersQuery = "DELETE FROM rangers *;";
+    String deleteLocationsQuery = "DELETE FROM locations *;";
+    String deleteSightingsQuery = "DELETE FROM sightings *;";
+    con.createQuery(deleteAnimalsQuery).executeUpdate();
+    con.createQuery(deleteRangersQuery).executeUpdate();
+    con.createQuery(deleteLocationsQuery).executeUpdate();
+    con.createQuery(deleteSightingsQuery).executeUpdate();
   }
+}
 }
