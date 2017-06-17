@@ -41,7 +41,7 @@ public class RegularAnimalTest {
     assertEquals("Rabbit", testAnimal.getName());
   }
 
-// set a new regular animal name
+// set a new regula animal name
   @Test
   public void setName_setsANewName_Goat() {
     RegularAnimal testAnimal = new RegularAnimal("Rabbit");
@@ -49,7 +49,42 @@ public class RegularAnimalTest {
     assertEquals("Goat", testAnimal.getName());
   }
 
+//throws an exception if the ranger tries to set an empty name of the regular animal
+  @Test(expected = IllegalArgumentException.class)
+  public void setName_cannotSetEmptyName_IllegalArgumentException() {
+    RegularAnimal testAnimal = new RegularAnimal("Rabbit");
+    testAnimal.setName("");
+  }
 
+//saves the name of the regular animal
+  @Test
+  public void save_savesNameToDB_Rabbit() {
+    RegularAnimal testAnimal = new RegularAnimal("Rabbit");
+    testAnimal.save();
+    RegularAnimal savedRegularAnimal = RegularAnimal.find(testAnimal.getId());
+    assertEquals("Rabbit", savedRegularAnimal.getName());
+  }
+
+//updates the name of the regular animal
+  @Test
+  public void update_preservesOriginalName_Rabbit() {
+    RegularAnimal testAnimal = new RegularAnimal("Rabbit");
+    testAnimal.save();
+    testAnimal.update();
+    RegularAnimal savedRegularAnimal = RegularAnimal.find(testAnimal.getId());
+    assertEquals("Rabbit", savedRegularAnimal.getName());
+  }
+
+//updates the new regular animal name
+  @Test
+  public void update_savesNewNameToDB_Goat() {
+    RegularAnimal testAnimal = new RegularAnimal("Rabbit");
+    testAnimal.save();
+    testAnimal.setName("Goat");
+    testAnimal.update();
+    RegularAnimal savedRegularAnimal = RegularAnimal.find(testAnimal.getId());
+    assertEquals("Goat", savedRegularAnimal.getName());
+  }
 
 
 
