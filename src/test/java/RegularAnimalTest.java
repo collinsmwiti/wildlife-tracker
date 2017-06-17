@@ -34,6 +34,21 @@ public class RegularAnimalTest {
     RegularAnimal testAnimal = new RegularAnimal("");
   }
 
+  // regular animal should be instantiated with the name
+  @Test
+  public void animal_instantiatesWithName_Rabbit() {
+    RegularAnimal testAnimal = new RegularAnimal("Rabbit");
+    assertEquals("Rabbit", testAnimal.getName());
+  }
+
+// set a new regular animal name
+  @Test
+  public void setName_setsANewName_Goat() {
+    RegularAnimal testAnimal = new RegularAnimal("Rabbit");
+    testAnimal.setName("Goat");
+    assertEquals("Goat", testAnimal.getName());
+  }
+
 
 
 
