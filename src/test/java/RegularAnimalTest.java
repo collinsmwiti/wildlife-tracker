@@ -21,6 +21,19 @@ public class RegularAnimalTest {
     assertTrue(testAnimal instanceof RegularAnimal);
   }
 
+//new regular animals should inatantiate without an id
+  @Test
+  public void animal_instantiatesWithoutId_0() {
+    RegularAnimal testAnimal = new RegularAnimal("Rabbit");
+    assertEquals(0, testAnimal.getId());
+  }
+
+//throws an exception if the ranger tries to instantiate a regular animal with an empty name
+  @Test(expected = IllegalArgumentException.class)
+  public void animal_cannotInstantiateEmptyName_IllegalArgumentException() {
+    RegularAnimal testAnimal = new RegularAnimal("");
+  }
+
 
 
 
