@@ -86,23 +86,121 @@ public class RegularAnimalTest {
     assertEquals("Goat", savedRegularAnimal.getName());
   }
 
+  // saves the id of the regular animal in the database
+  @Test
+  public void save_setsTheId_int() {
+    RegularAnimal testAnimal = new RegularAnimal("Rabbit");
+    testAnimal.save();
+    assertTrue(testAnimal.getId() > 0);
+  }
 
+// save the regular animal in the database
+  @Test
+  public void save_insertsObjectIntoDB_true() {
+    RegularAnimal testAnimal = new RegularAnimal("Rabbit");
+    testAnimal.save();
+    RegularAnimal savedRegularAnimal = RegularAnimal.find(testAnimal.getId());
+    assertTrue(testAnimal.equals(savedRegularAnimal));
+  }
 
+//throw an exception if the ranger tries to save the existing name into the database
+  @Test(expected = IllegalArgumentException.class)
+  public void save_cannotSaveIfNameAlreadyExists_IllegalArgumentException() {
+    RegularAnimal firstRegularAnimal = new RegularAnimal("Rabbit");
+    firstRegularAnimal.save();
+    RegularAnimal secondRegularAnimal = new RegularAnimal("Rabbit");
+    secondRegularAnimal.save();
+  }
 
+//delete the regular animal in the database
+  @Test
+  public void delete_removesObjectFromDB_null() {
+    RegularAnimal testAnimal = new RegularAnimal("Rabbit");
+    testAnimal.save();
+    testAnimal.delete();
+    RegularAnimal savedRegularAnimal = RegularAnimal.find(testAnimal.getId());
+    assertEquals(null, savedRegularAnimal);
+  }
 
+//update the regular animal in the database
+  @Test
+  public void update_preservesOriginalId_true() {
+    RegularAnimal testAnimal = new RegularAnimal("Rabbit");
+    testAnimal.save();
+    testAnimal.update();
+    RegularAnimal savedRegularAnimal = RegularAnimal.find(testAnimal.getId());
+    assertEquals(testAnimal.getId(), savedRegularAnimal.getId());
+  }
 
+//to prevent the ranger from updating a regular animals name to look similar to the existing regular animal in the database
+  @Test(expected = IllegalArgumentException.class)
+  public void update_cannotSaveIfNameAlreadyExists_IllegalArgumentException() {
+    RegularAnimal firstRegularAnimal = new RegularAnimal("Rabbit");
+    firstRegularAnimal.save();
+    RegularAnimal secondRegularAnimal = new RegularAnimal("Goat");
+    secondRegularAnimal.save();
+    secondRegularAnimal.setName("Rabbit");
+    secondRegularAnimal.update();
+  }
 
+//return true if the ranger gets regular animals within the database
+  @Test
+  public void all_getsAllObjectsFromDatabase_true() {
+    RegularAnimal firstRegularAnimal = new RegularAnimal("Rabbit");
+    firstRegularAnimal.save();
+    RegularAnimal secondRegularAnimal = new RegularAnimal("Goat");
+    secondRegularAnimal.save();
+    RegularAnimal[] expected = { firstRegularAnimal, secondRegularAnimal };
+    assertTrue(RegularAnimal.all().containsAll(Arrays.asList(expected)));
+  }
 
+//return nothing if the searched regular animal don't exist in the database
+  @Test
+  public void search_returnsNothingForUnknownValue_emptyList() {
+    RegularAnimal firstRegularAnimal = new RegularAnimal("Rabbit");
+    firstRegularAnimal.save();
+    RegularAnimal secondRegularAnimal = new RegularAnimal("Goat");
+    secondRegularAnimal.save();
+    List<RegularAnimal> foundRegularAnimals = RegularAnimal.search("fox");
+    assertEquals(Collections.<RegularAnimal>emptyList(), foundRegularAnimals);
+  }
 
+// return true if the data of the regular animals searched are true
+  @Test
+  public void search_returnsAllMatchingObjects_true() {
+    RegularAnimal firstRegularAnimal = new RegularAnimal("Bobcat");
+    firstRegularAnimal.save();
+    RegularAnimal secondRegularAnimal = new RegularAnimal("House Cat");
+    secondRegularAnimal.save();
+    RegularAnimal thirdRegularAnimal = new RegularAnimal("Rabbit");
+    thirdRegularAnimal.save();
+    List<RegularAnimal> foundRegularAnimals = RegularAnimal.search("cat");
+    RegularAnimal[] expected = { firstRegularAnimal, secondRegularAnimal };
+    assertEquals(Arrays.asList(expected), foundRegularAnimals);
+  }
 
+  //return true if the regular animal details are true
+  @Test
+  public void equals_objectIsEqualIfAllPropertiesAreEqual_true() {
+    RegularAnimal firstRegularAnimal = new RegularAnimal("Rabbit");
+    RegularAnimal secondRegularAnimal = new RegularAnimal("Rabbit");
+    assertTrue(firstRegularAnimal.equals(secondRegularAnimal));
+  }
 
-
-
-
-
-
-
-
-
+//sightings associated with the id
+  @Test
+  public void getSightings_getsSightingAssociatedWithId_Sighting() {
+    RegularAnimal testAnimal = new RegularAnimal("Rabbit");
+    testAnimal.save();
+    Location testLocation = new Location("Near bridge", 1.525, -2.311);
+    testLocation.save();
+    Ranger testRanger = new Ranger("User", "Bob", "Smith", 1, 5035550000L);
+    testRanger.save();
+    Sighting testSighting = new Sighting(testAnimal.getId(), testLocation.getId(), testRanger.getId(), new Timestamp(1L));
+    testSighting.save();
+    List<Sighting> foundSighting = testAnimal.getSightings();
+    Sighting[] expected = { testSighting };
+    assertTrue(foundSighting.containsAll(Arrays.asList(expected)));
+  }
 
 }
