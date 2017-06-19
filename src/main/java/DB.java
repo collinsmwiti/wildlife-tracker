@@ -1,5 +1,7 @@
 // imports
 import org.sql2o.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 //connecting to postgresql database in class DB
 public class DB {
