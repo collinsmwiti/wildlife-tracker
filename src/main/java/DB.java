@@ -1,9 +1,7 @@
-//imports
+// imports
 import org.sql2o.*;
-import java.net.URI;
-import java.net.URISyntaxException;
 
-//class DB
+//connecting to postgresql database in class DB
 public class DB {
     private static URI dbUri;
     public static Sql2o sql2o;
@@ -12,7 +10,7 @@ public class DB {
 
         try {
             if (System.getenv("DATABASE_URL") == null) {
-                dbUri = new URI("postgres://localhost:5432/wildlife-tracker");
+                dbUri = new URI("postgres://localhost:5432/wildlife_tracker");
             } else {
                 dbUri = new URI(System.getenv("DATABASE_URL"));
             }
